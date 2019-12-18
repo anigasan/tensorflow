@@ -347,6 +347,27 @@ def divide(x, y, name=None):
 @tf_export("math.multiply", "multiply")
 @dispatch.add_dispatch_support
 def multiply(x, y, name=None):
+  """Returns 'x' * 'y' element wise.
+  
+  For example:
+  
+  >>> x = 32
+  >>> y = 34
+  >>> tf.multiply(x, y)
+  <tf.Tensor: shape=() dtype=int32>
+  #returns 1088
+  
+  Args:
+    'x': A 'Tensor'. Must be one of the following types: 
+    'bfloat16', 'half', 'float32', 'float64', 'uint8', 'int8', 'uint16', 'int16', 'int32', 'int64', 'complex64', 'complex128'.
+    'y': A 'Tensor'. Must have the same type as 'x'.
+    'name': A name for the operation (optional).
+    
+  Returns:
+    A 'Tensor'. Has the same type as 'x'
+  """
+  
+  
   return gen_math_ops.mul(x, y, name)
 
 
