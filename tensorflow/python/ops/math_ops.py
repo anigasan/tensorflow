@@ -354,8 +354,8 @@ def multiply(x, y, name=None):
   >>> x = 32
   >>> y = 34
   >>> tf.multiply(x, y)
-  <tf.Tensor: shape=() dtype=int32>
-  #returns 1088
+  <tf.Tensor: shape=(1,), dtype=int32, numpy=array(1088, dtype=float32)>
+  
   
   Args:
     'x': A 'Tensor'. Must be one of the following types: 
