@@ -389,6 +389,26 @@ _mul.__doc__ = (
 @tf_export("math.subtract", "subtract")
 @dispatch.add_dispatch_support
 def subtract(x, y, name=None):
+  """ Returns 'x' - 'y' element wise
+  
+  For example:
+  >>> x = tf.constant([32.0])
+  >>> y = tf.constant([34.0])
+  >>> tf.subtract(x, y)
+  <tf.Tensor: shape=(1,), dtype=float32, numpy=array([-2.], dtype=float32)>
+  
+  Args:
+    'x': A 'Tensor'. Must be one of the following types:
+      'bfloat16', 'half', 'float32', 'float64', 'uint8', 'int8', 'uint16', 'int16', 'int32', 'int64', 'complex64', 'complex128'
+    'y': A 'Tensor'. Must have the same type as 'x'. 
+    'name': A name for the operation (optional)
+    
+  Returns:
+    A 'Tensor'. Same type as 'x'. 
+  """
+  if y == 0:
+    return x
+    
   return gen_math_ops.sub(x, y, name)
 
 
@@ -417,6 +437,7 @@ def _neg(x, name=None):
   """Computes numerical negative value element-wise.
 
   I.e., \\(y = -x\\).
+  
 
   Args:
     x: A `Tensor` or `SparseTensor`. Must be one of the following types: `half`,
@@ -439,7 +460,11 @@ def scalar_mul(scalar, x, name=None):
   Intended for use in gradient code which might deal with `IndexedSlices`
   objects, which are easy to multiply by a scalar but more expensive to
   multiply with arbitrary tensors.
-
+  
+  For example:
+  >>>tf.math.scalar_mul(tf.constant(32, dtype=tf.int32), tf.constant([34,35])) 
+  <tf.Tensor: shape=(2,), dtype=int32, numpy=array([1088, 1120], dtype=int32)>
+  
   Args:
     scalar: A 0-D scalar `Tensor`. Must have known shape.
     x: A `Tensor` or `IndexedSlices` to be scaled.
@@ -1091,6 +1116,12 @@ def truediv(x, y, name=None):
   point, the output will have the same type.  If the inputs are integral, the
   inputs are cast to `float32` for `int8` and `int16` and `float64` for `int32`
   and `int64` (matching the behavior of Numpy).
+  
+  For example:
+  >>> x = tf.constant([32, 34])
+  >>> y = tf.constant([35, 36])
+  >>> tf.math.truediv(x, y)
+  <tf.Tensor: shape=(2,), dtype=float64, numpy=array([0.91428571, 0.94444444])>
 
   Args:
     x: `Tensor` numerator of numeric type.
@@ -1137,6 +1168,10 @@ def div(x, y, name=None):
 @dispatch.add_dispatch_support
 def div_no_nan(x, y, name=None):
   """Computes a safe divide which returns 0 if the y is zero.
+  
+  For example:
+  >>>tf.math.divide_no_nan(tf.constant([32.0]), tf.constant([0.0]))
+  <tf.Tensor: shape=(1,), dtype=float32, numpy=array([0.], dtype=float32)>
 
   Args:
     x: A `Tensor`. Must be one of the following types: `float32`, `float64`.
@@ -1157,6 +1192,9 @@ def div_no_nan(x, y, name=None):
 @dispatch.add_dispatch_support
 def multiply_no_nan(x, y, name=None):
   """Computes the product of x and y and returns 0 if the y is zero, even if x is NaN or infinite.
+  For example:
+  >>> tf.math.multiply_no_nan(tf.constant([32.0]), tf.constant([34.0])) 
+  <tf.Tensor: shape=(1,), dtype=float32, numpy=array([1088.], dtype=float32)>
 
   Args:
     x: A `Tensor`. Must be one of the following types: `float32`, `float64`.
@@ -1199,6 +1237,10 @@ def floordiv(x, y, name=None):
 
   `x` and `y` must have the same type, and the result will have the same type
   as well.
+  
+  For example:
+  >>> tf.math.floordiv(tf.constant(32.0, tf.float32),tf.constant(31.0, tf.float32))
+  <tf.Tensor: shape=(), dtype=float32, numpy=1.0>
 
   Args:
     x: `Tensor` numerator of real numeric type.
@@ -2055,6 +2097,11 @@ def reduce_prod(input_tensor, axis=None, keepdims=False, name=None):
 
   If `axis` is None, all dimensions are reduced, and a
   tensor with a single element is returned.
+  
+  For example:
+  >>>ten = tf.constant([32, 36])
+  >>>tf.math.reduce_prod(ten, axis=None, keepdims=True)
+  <tf.Tensor: shape=(1,), dtype=int32, numpy=array([1152], dtype=int32)>
 
   Args:
     input_tensor: The tensor to reduce. Should have numeric type.
@@ -2181,6 +2228,11 @@ def reduce_min(input_tensor, axis=None, keepdims=False, name=None):
 
   If `axis` is None, all dimensions are reduced, and a
   tensor with a single element is returned.
+  
+  For example:
+  >>>ten = tf.constant([32, 36], axis=None, keepdims = True)
+  >>>tf.math.reduce_min(ten)
+  <tf.Tensor: shape=(), dtype=int32, numpy=32>
 
   Args:
     input_tensor: The tensor to reduce. Should have real numeric type.
@@ -2262,6 +2314,10 @@ def reduce_max(input_tensor, axis=None, keepdims=False, name=None):
 
   If `axis` is None, all dimensions are reduced, and a
   tensor with a single element is returned.
+  
+  For example:
+  >>>tf.math.reduce_max(tf.constant([32.0, 36.0]), axis=None, keepdims=True)
+  <tf.Tensor: shape=(1,), dtype=float32, numpy=array([36.], dtype=float32)>
 
   Args:
     input_tensor: The tensor to reduce. Should have real numeric type.
@@ -3173,6 +3229,10 @@ def sigmoid(x, name=None):
   """Computes sigmoid of `x` element-wise.
 
   Specifically, `y = 1 / (1 + exp(-x))`.
+  
+  For example:
+  >>> tf.math.sigmoid(tf.constant(32.0, tf.float32))
+  <tf.Tensor: shape=(), dtype=float32, numpy=1.0>
 
   Args:
     x: A Tensor with type `float16`, `float32`, `float64`, `complex64`, or
@@ -3199,6 +3259,10 @@ def log_sigmoid(x, name=None):
 
   Specifically, `y = log(1 / (1 + exp(-x)))`.  For numerical stability,
   we use `y = -tf.nn.softplus(-x)`.
+  
+  For example:
+  >>> tf.math.log_sigmoid(tf.constant(32.0, tf.float32))
+  <tf.Tensor: shape=(), dtype=float32, numpy=-1.2664166e-14>
 
   Args:
     x: A Tensor with type `float32` or `float64`.
@@ -3627,6 +3691,14 @@ def unsorted_segment_mean(data, segment_ids, num_segments, name=None):
 
   If the given segment ID `i` is negative, the value is dropped and will not
   be added to the sum of the segment.
+  
+  For example:
+  >>> tf.math.unsorted_segment_mean(tf.constant([1, 2, 3, 4]), tf.constant(2, dtype=tf.int32), num_segments=3)
+  <tf.Tensor: shape=(3, 4), dtype=float64, numpy=
+  array([[0., 0., 0., 0.],
+        [0., 0., 0., 0.],
+        [1., 2., 3., 4.]])>
+
 
   Args:
     data: A `Tensor` with floating point or complex dtype.
@@ -3676,6 +3748,12 @@ def unsorted_segment_sqrt_n(data, segment_ids, num_segments, name=None):
 
   If the given segment ID `i` is negative, the value is dropped and will not
   be added to the sum of the segment.
+  
+  For example:
+  >>> tf.math.unsorted_segment_sqrt_n(tf.constant([1.0, 2.0, 3.0, 4.0]), tf.constant(1, dtype=tf.int32), num_segments=2)
+  <tf.Tensor: shape=(2, 4), dtype=float32, numpy=
+  array([[0., 0., 0., 0.],
+        [1., 2., 3., 4.]], dtype=float32)>
 
   Args:
     data: A `Tensor` with floating point or complex dtype.
@@ -4186,6 +4264,12 @@ def polyval(coeffs, x, name=None):
 
      p(x) = coeffs[n-1] + x * (coeffs[n-2] + ... + x * (coeffs[1] +
             x * coeffs[0]))
+  
+  For example:
+  >>>coefficients = [tf.constant(32, dtype=tf.int32), tf.constant(33, dtype=tf.int32), tf.constant(34, dtype=tf.int32)]
+  >>>w = tf.Variable(tf.constant(1, dtype=tf.int32))
+  >>>tf.math.polyval(coefficients, w)
+  <tf.Tensor: shape=(), dtype=int32, numpy=99>
 
   Args:
     coeffs: A list of `Tensor` representing the coefficients of the polynomial.
